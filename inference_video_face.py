@@ -4,6 +4,7 @@
 # pylint: disable=E1101
 
 import sys
+import os
 import time
 import numpy as np
 import tensorflow as tf
@@ -16,10 +17,10 @@ from utils import visualization_utils_color as vis_util
 
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
-PATH_TO_CKPT = './model/frozen_inference_graph_face.pb'
+PATH_TO_CKPT = os.path.join(os.environ['MODEL_DIR'], 'frozen_inference_graph_face.pb')
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = './protos/face_label_map.pbtxt'
+PATH_TO_LABELS = os.path.join(os.environ['PROTOS_DIR'], 'face_label_map.pbtxt')
 
 NUM_CLASSES = 2
 
@@ -32,7 +33,7 @@ def load_image_into_numpy_array(image):
   return np.array(image.getdata()).reshape(
       (im_height, im_width, 3)).astype(np.uint8)
 
-cap = cv2.VideoCapture("./media/test.mp4")
+cap = cv2.VideoCapture(sys.argv[1])
 out = None
 
 detection_graph = tf.Graph()
@@ -56,7 +57,7 @@ with detection_graph.as_default():
 
       if out is None:
           [h, w] = image.shape[:2]
-          out = cv2.VideoWriter("./media/test_out.avi", 0, 25.0, (w, h))
+          out = cv2.VideoWriter(sys.argv[2], 0, 25.0, (w, h))
 
 
       image_np = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -99,3 +100,6 @@ with detection_graph.as_default():
 
     cap.release()
     out.release()
+
+
+

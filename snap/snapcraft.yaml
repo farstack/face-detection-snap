@@ -1,0 +1,201 @@
+name: face-detection
+base: core18 # the base snap is the execution environment for this snap
+version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
+summary: Single-line elevator pitch for your amazing snap # 79 char long summary
+description: |
+  This is my-snap's description. You have a paragraph or two to tell the
+  most important story about your snap. Keep it under 100 words though,
+  we live in tweetspace and your description wants to look good in the snap
+  store.
+
+grade: devel 
+confinement: strict
+
+layout:
+  /usr/share/X11:
+    bind: $SNAP/usr/share/X11
+  
+environment:
+  XWAYLAND_FULLSCREEN_WINDOW_HINT: title="glxgears"
+  
+apps:
+  camera: 
+    command: xwayland-kiosk-launch $SNAP/run_camera
+    plugs: 
+    - camera
+    - desktop
+    - opengl
+    - wayland
+    - network-bind
+
+
+  video: 
+    command: xwayland-kiosk-launch $SNAP/run_video
+    plugs: 
+    - camera
+    - desktop
+    - opengl
+    - wayland
+
+
+parts:
+  xwayland-kiosk-helper:
+    plugin: cmake
+    source: https://github.com/MirServer/xwayland-kiosk-helper.git
+    build-packages: [ build-essential ]
+    stage-packages: [ xwayland, i3, libegl1-mesa, libgl1-mesa-glx ]
+
+
+  my-part:
+    plugin: python
+    source: .
+    python-version: python3
+    build-packages: 
+      - python3
+      - mesa-utils
+      - pkg-config
+      - libcairo2-dev
+      - libsystemd-dev
+      - system-config-printer
+      - python-cups
+      - python3-dev
+      - git
+      - virtualenv
+      - build-essential
+      - libdbus-glib-1-dev
+      - libgirepository1.0-dev
+      - libcups2-dev
+    stage-packages:
+      - libavahi-client3
+      - libavahi-common3
+      - libcairo-gobject2
+      - libcairo2
+      - libcups2
+      - libfontconfig1
+      - libfreetype6
+      - libgirepository-1.0-1
+      - libice6
+      - libpixman-1-0
+      - libpng16-16
+      - libsm6
+      - libx11-6
+      - libxau6
+      - libxcb-render0
+      - libxcb-shm0
+      - libxcb1
+      - libxdmcp6
+      - libxext6
+      - libxrender1
+
+    python-packages: 
+      - absl-py==0.9.0
+      #- apturl==0.5.2
+      - astunparse==1.6.3
+      - bcc==0.1.10
+      #- bcrypt==3.1.7
+      - blinker==1.4
+      #- Brlapi==0.7.0
+      - cachetools==4.1.0
+      - certifi==2019.11.28
+      - chardet==3.0.4
+      #- command-not-found==0.3
+      - cryptography==2.8
+      #- cupshelpers==1.0
+      - dbus-python==1.2.16
+      - decorator==4.4.2
+      #- defer==1.0.6
+      - distro==1.4.0
+      #- distro-info===0.23ubuntu1
+      #- duplicity==0.8.12.0
+      - entrypoints==0.3
+      - fasteners==0.14.1
+      - future==0.18.2
+      - gast==0.3.3
+      - google-auth==1.14.3
+      - google-auth-oauthlib==0.4.1
+      - google-pasta==0.2.0
+      - grpcio==1.29.0
+      - h5py==2.10.0
+      - httplib2==0.14.0
+      - idna==2.8
+      - ipython-genutils==0.2.0
+      - Keras-Preprocessing==1.1.2
+      - keyring==18.0.1
+      #- language-selector==0.1
+      - launchpadlib==1.10.13
+      - lazr.restfulclient==0.14.2
+      - lazr.uri==1.0.3
+      - llvmlite==0.32.0
+      - lockfile==0.12.2
+      #- louis==3.12.0
+      - macaroonbakery==1.3.1
+      - Mako==1.1.0
+      - Markdown==3.2.2
+      - MarkupSafe==1.1.0
+      - monotonic==1.5
+      - netifaces==0.10.4
+      - numba==0.49.0
+      - numpy==1.18.3
+      - oauthlib==3.1.0
+      - olefile==0.46
+      - opencv-python==4.2.0.34
+      #- opencv-contrib-python==3.2.0.7
+      - opt-einsum==3.2.1
+      - paramiko==2.6.0
+      - pexpect==4.6.0
+      - Pillow==7.0.0
+      - protobuf==3.12.0
+      - pyasn1==0.4.8
+      - pyasn1-modules==0.2.8
+      - pycairo==1.16.2
+      - pycups==1.9.73
+      - PyGObject==3.36.0
+      - PyJWT==1.7.1
+      - pymacaroons==0.13.0
+      - PyNaCl==1.3.0
+      - pyRFC3339==1.1
+      #- python-apt==2.0.0
+      - python-dateutil==2.7.3
+      #- python-debian===0.1.36ubuntu1
+      - pytz==2019.3
+      - pyxdg==0.26
+      - PyYAML==5.3.1
+      - reportlab==3.5.34
+      - requests==2.22.0
+      - requests-oauthlib==1.3.0
+      - requests-unixsocket==0.2.0
+      - rsa==4.0
+      - scipy==1.4.1
+      - SecretStorage==2.3.1
+      - simplejson==3.16.0
+      - six==1.14.0
+      - ssh-import-id==5.10
+      - systemd-python==234
+      - tensorboard==2.2.1
+      - tensorboard-plugin-wit==1.6.0.post3
+      - tensorflow==2.2.0
+      - tensorflow-estimator==2.2.0
+      - termcolor==1.1.0
+      - traitlets==4.3.3
+      - traittypes==0.2.1
+      #- ubuntu-advantage-tools==20.3
+      #- ubuntu-drivers-common==0.0.0
+      #- ufw==0.36
+      #- unattended-upgrades==0.1
+      - urllib3==1.25.8
+      #- usb-creator==0.3.7
+      - wadllib==1.3.3
+      - Werkzeug==1.0.1
+      - wrapt==1.12.1
+      #- xkit==0.0.0
+  
+
+  scripts:
+    plugin: dump
+    source: .
+    stage:
+      - '*.py'
+      - 'model'
+      - 'protos'
+      - run_camera
+      - run_video

@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+cd $SNAP
+
+MODEL_DIR="$SNAP/model"
+export MODEL_DIR
+PROTOS_DIR="$SNAP/protos"
+export PROTOS_DIR
+
+python3 $SNAP/inference_usbCam_face.py 0

@@ -4,6 +4,7 @@
 # pylint: disable=E1101
 
 import sys
+import os
 import time
 import numpy as np
 import tensorflow as tf
@@ -13,10 +14,10 @@ from utils import label_map_util
 from utils import visualization_utils_color as vis_util
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
-PATH_TO_CKPT = './model/frozen_inference_graph_face.pb'
+PATH_TO_CKPT = os.path.join(os.environ['MODEL_DIR'], 'frozen_inference_graph_face.pb')
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = './protos/face_label_map.pbtxt'
+PATH_TO_LABELS = os.path.join(os.environ['PROTOS_DIR'], 'face_label_map.pbtxt')
 
 NUM_CLASSES = 2
 
@@ -121,3 +122,4 @@ if __name__ == "__main__":
             break
 
     cap.release()
+
