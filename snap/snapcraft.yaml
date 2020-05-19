@@ -46,7 +46,19 @@ parts:
     stage-packages: [ xwayland, i3, libegl1-mesa, libgl1-mesa-glx ]
 
 
-  my-part:
+  opencv:
+    source: https://github.com/opencv/opencv.git
+    source-type: git
+    python-packages:
+    - scikit-build
+    build-packages:
+    - libssl-dev
+    plugin: python
+  
+  
+
+  face-detection:
+    after: [opencv]
     plugin: python
     source: .
     python-version: python3
@@ -89,7 +101,7 @@ parts:
 
     python-packages: 
       - numpy==1.18.3
-      - opencv-python==4.2.0.34
+      #- opencv-python==4.2.0.34
       - Pillow==7.0.0
       - protobuf==3.12.0
       - tensorflow==2.2.0
