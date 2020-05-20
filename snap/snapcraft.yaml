@@ -46,19 +46,30 @@ parts:
     stage-packages: [ xwayland, i3, libegl1-mesa, libgl1-mesa-glx ]
 
 
-  opencv:
-    source: https://github.com/opencv/opencv.git
+  opencv-python:
+    source: https://github.com/skvark/opencv-python.git
     source-type: git
-    python-packages:
-    - scikit-build
     build-packages:
     - libssl-dev
+    - python-setuptools
+    - qt4-default
+    stage-packages: 
+    - libaudio2
+    - libjbig0
+    - libjpeg-turbo8
+    - libqt4-test
+    - libqtcore4
+    - libqtgui4
+    - libtiff5
     plugin: python
+    python-packages:
+      - numpy==1.18.3
+      - scikit-build
   
   
 
   face-detection:
-    after: [opencv]
+    after: [opencv-python]
     plugin: python
     source: .
     python-version: python3
@@ -108,7 +119,7 @@ parts:
   
   scripts:
     plugin: dump
-    source: .
+    source: scripts
     stage:
       - '*.py'
       - 'model'
