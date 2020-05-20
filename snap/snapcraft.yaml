@@ -119,7 +119,7 @@ parts:
   
   scripts:
     plugin: dump
-    source: scripts
+    source: .
     stage:
       - '*.py'
       - 'model'
