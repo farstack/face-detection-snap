@@ -45,14 +45,46 @@ parts:
     build-packages: [ build-essential ]
     stage-packages: [ xwayland, i3, libegl1-mesa, libgl1-mesa-glx ]
 
+
+  bazel:
+    source: https://github.com/bazelbuild/bazel/releases/download/3.0.0/bazel_3.0.0-linux-x86_64.deb
+    source-type: deb
+    plugin: dump
+      
+
   tensorflow-python:
+    after: [bazel]
     source: https://github.com/tensorflow/tensorflow.git
+    source-tag: 'v2.1.1'
     plugin: python
-    python-version: python3
+    build-packages: [python-pip, python3-pip]
+    python-packages: 
+      - numpy
+      - pip
+      - six
+      - wheel
+      - setuptools
+      - mock 
+      - 'future>=0.17.1'
+      - keras_applications
+      - keras_preprocessing
+    override-build: |
+      export PYTHON_LIB_PATH=/usr/lib/python3/dist-packages
+      export PYTHON_BIN_PATH=/usr/bin/python3
+      ./configure
+      bazel build //tensorflow/tools/pip_package:build_pip_package
+
+      
+      ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+      PREFIX_PATH=$SNAPCRAFT_PART_INSTALL
+      pip3 install --install-option="--prefix=$PREFIX_PATH"  /tmp/tensorflow_pkg/tensorflow-*.whl
+
 
   opencv-python:
     source: https://github.com/skvark/opencv-python.git
     source-type: git
+    plugin: python
+    python-version: python3
     build-packages:
     - libssl-dev
     - python-setuptools
@@ -73,7 +105,6 @@ parts:
     - python-dev
     - liblapack-dev 
     - cython
-    plugin: python
     python-packages:
       - Cython
       - numpy==1.18.3
@@ -83,6 +114,7 @@ parts:
 
   face-detection:
     after: [opencv-python, tensorflow-python]
+    #after: [tensorflow-python]
     plugin: python
     source: .
     python-version: python3
