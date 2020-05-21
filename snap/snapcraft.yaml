@@ -45,6 +45,10 @@ parts:
     build-packages: [ build-essential ]
     stage-packages: [ xwayland, i3, libegl1-mesa, libgl1-mesa-glx ]
 
+  tensorflow-python:
+    source: https://github.com/tensorflow/tensorflow.git
+    plugin: python
+    python-version: python3
 
   opencv-python:
     source: https://github.com/skvark/opencv-python.git
@@ -61,15 +65,24 @@ parts:
     - libqtcore4
     - libqtgui4
     - libtiff5
+    - libblas3
+    - libblas-dev
+    - python-scipy
+    - gcc 
+    - gfortran 
+    - python-dev
+    - liblapack-dev 
+    - cython
     plugin: python
     python-packages:
+      - Cython
       - numpy==1.18.3
       - scikit-build
   
   
 
   face-detection:
-    after: [opencv-python]
+    after: [opencv-python, tensorflow-python]
     plugin: python
     source: .
     python-version: python3
@@ -109,13 +122,12 @@ parts:
       - libxdmcp6
       - libxext6
       - libxrender1
-
     python-packages: 
       - numpy==1.18.3
       #- opencv-python==4.2.0.34
       - Pillow==7.0.0
       - protobuf==3.12.0
-      - tensorflow==2.2.0
+      #- tensorflow==2.2.0
   
   scripts:
     plugin: dump
