@@ -126,7 +126,7 @@ parts:
       - numpy==1.18.3
       #- opencv-python==4.2.0.34
       - Pillow==7.0.0
-      - protobuf==3.12.0
+      - protobuf #==3.12.0
       #- tensorflow==2.2.0
   
   scripts:
