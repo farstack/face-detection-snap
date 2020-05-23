@@ -21,8 +21,8 @@ snapcraft --use-lxd
 After building the snap, you can install, configure and run it with the following commands
 ```
 snap install --dangerous ./face-detection_0.1_amd64.snap
-snap connect face-dection:camera
-face-dectection.camera
+snap connect face-detection:camera
+face-detection.camera
 ```
 
 ## About the model
