@@ -1,0 +1,19 @@
+--- parts/bazel/src/src/main/java/com/google/devtools/build/lib/syntax/BUILD    2020-05-22 00:57:35.066128847 +0000
++++ hi  2020-05-22 05:27:29.211361720 +0000
+@@ -169,7 +169,7 @@
+         "//src/conditions:freebsd": ["@bazel_tools//tools/jdk:jni_md_header-freebsd"],
+         "//src/conditions:openbsd": ["@bazel_tools//tools/jdk:jni_md_header-openbsd"],
+         "//src/conditions:windows": ["@bazel_tools//tools/jdk:jni_md_header-windows"],
+-        "//conditions:default": [],
++        "//conditions:default": ["@bazel_tools//tools/jdk:jni_md_header-linux"],
+     }),
+     includes = ["../../../../../../../../../external/bazel_tools/tools/jdk/include"] + select({
+         "//src/conditions:linux_x86_64": ["../../../../../../../../../external/bazel_tools/tools/jdk/include/linux"],
+@@ -179,6 +179,6 @@
+         "//src/conditions:freebsd": ["../../../../../../../../../external/bazel_tools/tools/jdk/include/freebsd"],
+         "//src/conditions:openbsd": ["../../../../../../../../../external/bazel_tools/tools/jdk/include/openbsd"],
+         "//src/conditions:windows": ["../../../../../../../../../external/bazel_tools/tools/jdk/include/win32"],
+-        "//conditions:default": [],
++        "//conditions:default": ["../../../../../../../../../external/bazel_tools/tools/jdk/include/linux"],
+     }),
+ )

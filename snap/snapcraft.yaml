@@ -46,18 +46,45 @@ parts:
     stage-packages: [ xwayland, i3, libegl1-mesa, libgl1-mesa-glx ]
 
 
-  bazel:
-    source: https://github.com/bazelbuild/bazel/releases/download/3.0.0/bazel_3.0.0-linux-x86_64.deb
-    source-type: deb
+    
+  patches:
     plugin: dump
+    source: patches
+
+  bazel:
+    after: [patches]
+    plugin: nil
+    #source: https://github.com/bazelbuild/bazel
+    #source-tag: '3.1.0'
+    #source: https://github.com/bazelbuild/bazel/releases/download/3.0.0/bazel-3.0.0-dist.zip
+    #source: https://github.com/bazelbuild/bazel/releases/download/2.2.0/bazel-2.2.0-dist.zip
+    source: https://github.com/bazelbuild/bazel/releases/download/0.29.1/bazel-0.29.1-dist.zip
+    build-packages:
+      - build-essential
+      - python
+      - zip
+      - unzip
+      - openjdk-11-jdk
+      - python-numpy
+    stage-packages: [python-numpy]
+    override-build: |
+      #patch src/main/java/com/google/devtools/build/lib/syntax/BUILD < $SNAPCRAFT_STAGE/patches/BUILD_jni_md 
+      #patch scripts/bootstrap/compile.sh < $SNAPCRAFT_STAGE/patches/compile 
+
+      env EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk" bash ./compile.sh
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp output/bazel $SNAPCRAFT_PART_INSTALL/bin
+
+
       
 
   tensorflow-python:
-    after: [bazel]
+    after: [bazel, scripts]
     source: https://github.com/tensorflow/tensorflow.git
     source-tag: 'v2.1.1'
     plugin: python
-    build-packages: [python-pip, python3-pip]
+    python-version: python3
+    build-packages: [cython, libatlas-base-dev ]
     python-packages: 
       - numpy
       - pip
@@ -69,10 +96,21 @@ parts:
       - keras_applications
       - keras_preprocessing
     override-build: |
-      export PYTHON_LIB_PATH=/usr/lib/python3/dist-packages
+      set -x
+      snapcraftctl build
+
+      /usr/bin/pip3 install cython
+      /usr/bin/pip3 install numpy pip six wheel setuptools mock  'future>=0.17.1' keras_applications keras-preprocessing==1.1.0 
+
+      #export PYTHON_LIB_PATH=$SNAPCRAFT_PART_INSTALL/usr/lib/python3/dist-packages
+      export PYTHON_LIB_PATH=$SNAPCRAFT_PART_INSTALL/lib/python3.6/site-packages
       export PYTHON_BIN_PATH=/usr/bin/python3
+      
+      env
+      pip3 install numpy
       ./configure
-      bazel build //tensorflow/tools/pip_package:build_pip_package
+      bazel build //tensorflow/tools/pip_package:build_pip_package --host_javabase=@local_jdk//:jdk 
+
 
       
       ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
@@ -110,10 +148,11 @@ parts:
       - numpy==1.18.3
       - scikit-build
   
-  
+      
+    
 
   face-detection:
-    after: [opencv-python, tensorflow-python]
+    after: [ tensorflow-python]
     #after: [tensorflow-python]
     plugin: python
     source: .

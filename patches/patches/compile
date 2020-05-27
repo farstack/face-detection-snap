@@ -1,0 +1,11 @@
+--- scripts/bootstrap/compile.sh        2020-05-21 20:33:22.373168345 +0000
++++ compile.sh  2020-05-22 00:43:55.522091453 +0000
+@@ -151,7 +151,7 @@
+   # additional arguments to be passed to javac.
+   run "${JAVAC}" -classpath "${classpath}" -sourcepath "${sourcepath}" \
+       -d "${output}/classes" -source "$JAVA_VERSION" -target "$JAVA_VERSION" \
+-      -encoding UTF-8 ${BAZEL_JAVAC_OPTS} "@${paramfile}"
++      -encoding UTF-8 ${BAZEL_JAVAC_OPTS} "@${paramfile}" -J-Xmx750M
+ 
+   log "Extracting helper classes for $name..."
+   for f in ${library_jars} ; do
