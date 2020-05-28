@@ -51,10 +51,15 @@ parts:
     source: ./src
     build-packages:
       - python3-pip
+      - gcc
+      - python3-dev
     stage:
       - -usr/bin/f2py
     stage-packages:
       - python3.7
+      - python3-pip
+      - python3-setuptools
+      - python3-dev
     python-packages:
       - pip
       - Image
@@ -68,7 +73,10 @@ parts:
       WHEEL_FILE='https://github.com/lhelontra/tensorflow-on-arm/releases/download/v2.0.0/tensorflow-2.0.0-cp37-none-linux_armv7l.whl'
       fi
 
-      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3 -m pip install -I $WHEEL_FILE
+      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3.7 -m pip install wheel
+      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3.7 -m pip install cython
+      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3.7 -m pip install -I $WHEEL_FILE
+      
 
       find $SNAPCRAFT_PART_INSTALL
 
