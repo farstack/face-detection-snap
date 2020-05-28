@@ -6,5 +6,7 @@ MODEL_DIR="$SNAP/model"
 export MODEL_DIR
 PROTOS_DIR="$SNAP/protos"
 export PROTOS_DIR
+export PYTHONPATH=/snap/face-detection/current/usr/lib/python3.6/site-packages:/snap/face-detection/current/lib/python3.6/site-packages
+
 
 python3 $SNAP/inference_usbCam_face.py 0

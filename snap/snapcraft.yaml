@@ -46,60 +46,75 @@ parts:
     stage-packages: [ xwayland, i3, libegl1-mesa, libgl1-mesa-glx ]
 
 
-  my-part:
+  my-app:
     plugin: python
-    source: .
-    python-version: python3
-    build-packages: 
-      - python3
-      - mesa-utils
-      - pkg-config
-      - libcairo2-dev
-      - libsystemd-dev
-      - system-config-printer
-      - python-cups
-      - python3-dev
-      - git
-      - virtualenv
-      - build-essential
-      - libdbus-glib-1-dev
-      - libgirepository1.0-dev
-      - libcups2-dev
-    stage-packages:
-      - libavahi-client3
-      - libavahi-common3
-      - libcairo-gobject2
-      - libcairo2
-      - libcups2
-      - libfontconfig1
-      - libfreetype6
-      - libgirepository-1.0-1
-      - libice6
-      - libpixman-1-0
-      - libpng16-16
-      - libsm6
-      - libx11-6
-      - libxau6
-      - libxcb-render0
-      - libxcb-shm0
-      - libxcb1
-      - libxdmcp6
-      - libxext6
-      - libxrender1
-
-    python-packages: 
-      - numpy==1.18.3
-      - opencv-python==4.2.0.34
-      - Pillow==7.0.0
-      - protobuf==3.12.0
-      - tensorflow==2.2.0
-  
-  scripts:
-    plugin: dump
-    source: .
+    source: ./src
+    build-packages:
+      - python3-pip
     stage:
-      - '*.py'
-      - 'model'
-      - 'protos'
-      - run_camera
-      - run_video
+      - -usr/bin/f2py
+    stage-packages:
+      - python3.7
+    python-packages:
+      - pip
+      - Image
+    override-build: |
+      set -x
+
+      WHEEL_FILE='tensorflow==2.0.0b0'
+      echo arch is $SNAPCRAFT_ARCH_TRIPLET
+      if [ "$SNAPCRAFT_ARCH_TRIPLET" = "arm-linux-gnueabh" ]
+      then
+      WHEEL_FILE='https://github.com/lhelontra/tensorflow-on-arm/releases/download/v2.0.0/tensorflow-2.0.0-cp37-none-linux_armv7l.whl'
+      fi
+
+      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3 -m pip install -I $WHEEL_FILE
+
+      find $SNAPCRAFT_PART_INSTALL
+
+      snapcraftctl build
+
+
+
+  opencv-python:
+    #after: [tensorflow]
+    source: https://github.com/skvark/opencv-python.git
+    source-type: git
+    source-tag: '34'
+    plugin: python
+    python-version: python3
+    build-packages:
+    - python3.7
+    - libssl-dev
+    - python-setuptools
+    - qt4-default
+    stage-packages: 
+    - python3.7
+    - libaudio2
+    - libjbig0
+    - libjpeg-turbo8
+    - libqt4-test
+    - libqtcore4
+    - libqtgui4
+    - libtiff5
+    - libblas3
+    - libblas-dev
+    - python-scipy
+    - gcc 
+    - gfortran 
+    - python-dev
+    - liblapack-dev 
+    - python-pip
+    - cython
+    python-packages:
+      - pip
+      - Cython
+      - numpy==1.18.3
+      - scikit-build
+      - utils
+  
+
+
+  static:
+    plugin: dump
+    source: ./static
