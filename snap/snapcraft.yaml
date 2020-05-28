@@ -63,7 +63,7 @@ parts:
 
       WHEEL_FILE='tensorflow==2.0.0b0'
       echo arch is $SNAPCRAFT_ARCH_TRIPLET
-      if [ "$SNAPCRAFT_ARCH_TRIPLET" = "arm-linux-gnueabh" ]
+      if [ "$SNAPCRAFT_ARCH_TRIPLET" = "arm-linux-gnueabihf" ]
       then
       WHEEL_FILE='https://github.com/lhelontra/tensorflow-on-arm/releases/download/v2.0.0/tensorflow-2.0.0-cp37-none-linux_armv7l.whl'
       fi
