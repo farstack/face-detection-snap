@@ -52,14 +52,14 @@ parts:
     build-packages:
       - python3-pip
       - gcc
-      - python3-dev
+      - python3.7-dev
     stage:
       - -usr/bin/f2py
     stage-packages:
       - python3.7
       - python3-pip
       - python3-setuptools
-      - python3-dev
+      - python3.7-dev
     python-packages:
       - pip
       - Image
