@@ -58,6 +58,7 @@ parts:
       - python-pip
       - python3.7-venv
       - python3-wheel
+      - libhdf5-dev
     stage:
       - -usr/bin/f2py
     stage-packages:
