@@ -53,6 +53,11 @@ parts:
       - python3-pip
       - gcc
       - python3.7-dev
+      - libpq-dev
+      - python-dev
+      - python-pip
+      - python3.7-venv
+      - python3-wheel
     stage:
       - -usr/bin/f2py
     stage-packages:
