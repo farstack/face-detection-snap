@@ -59,6 +59,7 @@ parts:
       - python3.7-venv
       - python3-wheel
       - libhdf5-dev
+      - build-essential
     stage:
       - -usr/bin/f2py
     stage-packages:
@@ -66,6 +67,7 @@ parts:
       - python3-pip
       - python3-setuptools
       - python3.7-dev
+      - build-essential
     python-packages:
       - pip
       - Image
@@ -79,9 +81,10 @@ parts:
       WHEEL_FILE='https://github.com/lhelontra/tensorflow-on-arm/releases/download/v2.0.0/tensorflow-2.0.0-cp37-none-linux_armv7l.whl'
       fi
 
-      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3.7 -m pip install -I wheel
-      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3.7 -m pip install -I cython
-      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3.7 -m pip install -I $WHEEL_FILE
+      
+      #PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL /usr/bin/python3.7 -m pip install -I wheel
+      #PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL /usr/bin/python3.7 -m pip install -I cython
+      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL /usr/bin/python3.7 -m pip install -I $WHEEL_FILE
       
 
       find $SNAPCRAFT_PART_INSTALL
