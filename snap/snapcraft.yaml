@@ -17,39 +17,74 @@ layout:
   
 environment:
   XWAYLAND_FULLSCREEN_WINDOW_HINT: title="glxgears"
+  XWAYLAND_I3_CONFIG_FILE: $SNAP_DATA/i3.config
+  PYTHONPATH: $SNAP/usr/lib/python3.6/site-packages
+
+
+plugs:
+  x11-plug: # because cannot have identical plug/slot name in same yaml.
+    interface: x11
   
 apps:
-  camera: 
-    command: xwayland-kiosk-launch $SNAP/run_camera
+  face-detection: 
+    command: $SNAP/run_camera
     plugs: 
     - camera
     - desktop
+    - desktop-legacy
+    - x11-plug
     - opengl
     - wayland
     - network-bind
+    - network-control
+    - mount-observe
+    
 
 
-  video: 
-    command: xwayland-kiosk-launch $SNAP/run_video
+  daemon: 
+    command: run-daemon xwayland-kiosk-launch $SNAP/run_camera
+    daemon: simple
     plugs: 
     - camera
     - desktop
     - opengl
     - wayland
+    - network
+    - network-bind
+    - network-control
+    - mount-observe
+    - x11-plug
+    slots: [ x11 ]
+
+plugs:
+  x11-plug: # because cannot have identical plug/slot name in same yaml.
+    interface: x11
 
 
 parts:
+  mir-kiosk-snap-launch:
+    plugin: dump
+    source: https://github.com/MirServer/mir-kiosk-snap-launch.git
+    override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl pulseaudio wayland
+
   xwayland-kiosk-helper:
     plugin: cmake
     source: https://github.com/MirServer/xwayland-kiosk-helper.git
     build-packages: [ build-essential ]
-    stage-packages: [ xwayland, i3, libegl1-mesa, libgl1-mesa-glx ]
+    stage-packages: [ xwayland, i3, i3status, libegl1-mesa, libgl1-mesa-glx ]
 
 
   my-part:
     plugin: python
-    source: .
+    source: ./src
     python-version: python3
+    override-build: |
+      snapcraftctl build
+
+      WHEEL_FILE=./wheels/tensorflow-2.2.0-cp36-cp36m-linux_x86_64.whl
+      cat ${WHEEL_FILE}.* > $WHEEL_FILE
+      PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3 -m pip install -I $WHEEL_FILE
+      
     build-packages: 
       - python3
       - mesa-utils
@@ -86,17 +121,18 @@ parts:
       - libxdmcp6
       - libxext6
       - libxrender1
+      - python3-numpy
+      - libblas3
 
     python-packages: 
-      - numpy==1.18.3
+      #- numpy==1.18.3
       - opencv-python==4.2.0.34
       - Pillow==7.0.0
       - protobuf==3.12.0
-      - tensorflow==2.2.0
   
   scripts:
     plugin: dump
-    source: .
+    source: ./src
     stage:
       - '*.py'
       - 'model'

@@ -7,4 +7,6 @@ export MODEL_DIR
 PROTOS_DIR="$SNAP/protos"
 export PROTOS_DIR
 
+touch $SNAP_DATA/i3.config
+
 python3 $SNAP/inference_usbCam_face.py 0
