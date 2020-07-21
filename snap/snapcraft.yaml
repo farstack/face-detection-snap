@@ -90,9 +90,10 @@ parts:
     override-build: | 
       case "$SNAPCRAFT_ARCH_TRIPLET" in
         *arm*)
-        mkdir -p $SNAPCRAFT_STAGE/bin
-        wget https://github.com/powderluv/bazel-bin/raw/master/bazel-aarch64-29
-        mv bazel-aarch64-29 $SNAPCRAFT_STAGE/bin/
+          mkdir -p $SNAPCRAFT_STAGE/bin
+          wget https://github.com/powderluv/bazel-bin/raw/master/bazel-aarch64-29
+          mv bazel-aarch64-29 $SNAPCRAFT_STAGE/bin/
+          ;;
         *x86_64*)
           # install bazel
           curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
@@ -100,9 +101,11 @@ parts:
           apt update
           apt install -y bazel
           apt install -y bazel-2.0
+          ;;
         *)
             echo "Unsupported architecture!"
-            exit 1 ;;
+            exit 1
+            ;;
       esac
 
 
