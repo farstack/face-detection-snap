@@ -128,12 +128,13 @@ parts:
       echo 'export PYTHON_BIN_PATH="'$PWD'/venv/bin/python"' > tools/python_bin_path.sh
 
       # Build Tensforflow
-      bazel build --local_ram_resources=2048 //tensorflow/tools/pip_package:build_pip_package
+      bazel build --local_ram_resources=2048 --jobs 2 //tensorflow/tools/pip_package:build_pip_package
       #bazel build //tensorflow/tools/pip_package:build_pip_package
 
       # Build the wheel
       ./bazel-bin/tensorflow/tools/pip_package/build_pip_package ./tensorflow_pkg
-      cp ./tensorflow_pkg/tensorflow-2.2.0-cp36-cp36m-linux_x86_64.whl SNAPCRAFT_STAGE/
+      #cp ./tensorflow_pkg/tensorflow-2.2.0-cp36-cp36m-linux_x86_64.whl $SNAPCRAFT_STAGE/
+      cp ./tensorflow_pkg/tensorflow-*linux_x86_64.whl $SNAPCRAFT_STAGE/
 
     
 
@@ -146,7 +147,7 @@ parts:
     override-build: |
       snapcraftctl build
 
-      WHEEL_FILE=$SNAPCRAFT_STAGE/tensorflow-2.2.0-cp36-cp36m-linux_x86_64.whl
+      WHEEL_FILE=$SNAPCRAFT_STAGE/tensorflow-*-linux_x86_64.whl
       PYTHONUSERBASE=$SNAPCRAFT_PART_INSTALL python3 -m pip install -I $WHEEL_FILE
       
     build-packages: 
